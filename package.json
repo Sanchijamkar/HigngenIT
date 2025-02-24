@@ -1,7 +1,7 @@
 {
   "name": "student_registration",
   "version": "1.0.0",
-  "description": "",
+  "description": "MERN Stack",
   "type": "module",
   "main": "index.js",
   "scripts": {
@@ -23,5 +23,14 @@
     "mongoose": "^8.5.3",
     "nodemon": "^3.1.4",
     "react-redux": "^9.2.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dulakshi2002/Student-Registration-System.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dulakshi2002/Student-Registration-System/issues"
+  },
+  "homepage": "https://github.com/dulakshi2002/Student-Registration-System#readme"
 }
