@@ -62,7 +62,7 @@ export default function Home() {
 
         {/* Text overlay (fixed and stable) */}
         <div className="relative z-10 flex flex-col justify-center items-center h-full text-white">
-          <h1 className="text-6xl font-bold mb-4">Welcome to Chic Choice</h1>
+          <h1 className="text-6xl font-bold mb-4">Welcome to HighGenIT</h1>
           <p className="text-2xl mb-8 text-center px-4">
             Learn coding with interactive tutorials, quizzes, and real-time code practice.
           </p>
@@ -80,7 +80,7 @@ export default function Home() {
 
       {/* Stats Section */}
       <section className="container mx-auto py-20 px-5 text-center bg-blue-50">
-        <h2 className="text-4xl font-bold mb-10">EduCode by the Numbers</h2>
+        <h2 className="text-4xl font-bold mb-10">HighGenIT by the Numbers</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div className="p-6">
             <h3 className="text-5xl font-bold text-blue-600">50K+</h3>
@@ -103,7 +103,7 @@ export default function Home() {
 
       {/* Why EduCode Section with Improved Images */}
       <section className="container mx-auto py-20 px-5">
-        <h2 className="text-4xl font-bold text-center mb-10">Why EduCode?</h2>
+        <h2 className="text-4xl font-bold text-center mb-10">Why HighGenIT?</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
           <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
             <img
@@ -156,22 +156,22 @@ export default function Home() {
           <h2 className="text-4xl font-bold text-center mb-10">Featured Courses</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="bg-gray-100 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
-              <h3 className="text-2xl font-semibold mb-4">Beginner's Guide to Python</h3>
-              <p className="text-gray-600 mb-4">Learn the basics of Python and start building projects in no time.</p>
+              <h3 className="text-2xl font-semibold mb-4">Beginner's Guide to Frontend Technologies</h3>
+              <p className="text-gray-600 mb-4">Learn the basics of  Frontend Technologies and start building projects in no time.</p>
               <Link to="/courses/python" className="text-blue-600 font-semibold hover:underline">
                 Learn More
               </Link>
             </div>
             <div className="bg-gray-100 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
-              <h3 className="text-2xl font-semibold mb-4">Mastering C</h3>
-              <p className="text-gray-600 mb-4">Deep dive into C with advanced projects and problem-solving challenges.</p>
+              <h3 className="text-2xl font-semibold mb-4">Advanced Java</h3>
+              <p className="text-gray-600 mb-4">Deep dive into Java with advanced java projects and problem-solving challenges.</p>
               <Link to="/courses/c" className="text-blue-600 font-semibold hover:underline">
                 Learn More
               </Link>
             </div>
             <div className="bg-gray-100 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
-              <h3 className="text-2xl font-semibold mb-4">C++ Unlocked</h3>
-              <p className="text-gray-600 mb-4">Harness C++ features for creating fast, efficient software.</p>
+              <h3 className="text-2xl font-semibold mb-4">Backend Technologies Unlocked</h3>
+              <p className="text-gray-600 mb-4">Harness Backend Technologies features for creating fast, efficient software.</p>
               <Link to="/courses/cpp" className="text-blue-600 font-semibold hover:underline">
                 Learn More
               </Link>
@@ -193,7 +193,7 @@ export default function Home() {
           <h2 className="text-4xl font-bold text-center mb-10">What Our Learners Say</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div className="p-6 rounded-lg shadow-lg bg-white">
-              <p className="text-gray-600 mb-4">"EduCode helped me transition from a complete beginner to a confident coder!"</p>
+              <p className="text-gray-600 mb-4">"HighGenIT helped me transition from a complete beginner to a confident coder!"</p>
               <h4 className="font-semibold text-xl">- John Doe</h4>
             </div>
             <div className="p-6 rounded-lg shadow-lg bg-white">
@@ -201,7 +201,7 @@ export default function Home() {
               <h4 className="font-semibold text-xl">- Jane Smith</h4>
             </div>
             <div className="p-6 rounded-lg shadow-lg bg-white">
-              <p className="text-gray-600 mb-4">"EduCode's real-time IDE is perfect for practicing coding while learning!"</p>
+              <p className="text-gray-600 mb-4">"HighGenIT's real-time IDE is perfect for practicing coding while learning!"</p>
               <h4 className="font-semibold text-xl">- Alex Johnson</h4>
             </div>
           </div>
@@ -212,7 +212,7 @@ export default function Home() {
       <section className="bg-blue-300 text-white py-20 text-center">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold mb-6">Start Your Coding Journey Today!</h2>
-          <p className="text-xl mb-8">Join thousands of learners and improve your coding skills with EduCode.</p>
+          <p className="text-xl mb-8">Join thousands of learners and improve your coding skills with HighGenIT.</p>
           <button
             onClick={handleButtonClick}
             className="bg-white text-blue-600 px-8 py-4 rounded-full shadow-lg hover:bg-gray-200 transition duration-300"
@@ -224,7 +224,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="bg-blue-400 text-white py-6 text-center">
-        <p>&copy; 2024 EduCode. Empowering the next generation of coders.</p>
+        <p>&copy; 2024 HighGenIT. Empowering the next generation of coders.</p>
       </footer>
     </div>
   );

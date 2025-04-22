@@ -16,7 +16,7 @@ export default function About() {
       >
         <div className="absolute inset-0 bg-opacity-70"></div> {/* Blue overlay for better readability */}
         <div className="container mx-auto px-5 text-center relative z-10"> {/* Text should be in front of the image */}
-          <h1 className="text-6xl font-bold mb-4 mt-44">About EduCode</h1>
+          <h1 className="text-6xl font-bold mb-4 mt-44">About HighGenIT</h1>
           <p className="text-2xl mb-8">
           Empowering beginners to master coding with interactive courses, built-in IDE, and hands-on practice.
           </p>
@@ -117,7 +117,7 @@ export default function About() {
 
       {/* Footer */}
       <footer className="bg-blue-600 text-white py-6 text-center">
-        <p>&copy; 2024 EduCode. Empowering the next generation of coders.</p>
+        <p>&copy; 2024 HighGenIT. Empowering the next generation of coders.</p>
       </footer>
     </div>
   );

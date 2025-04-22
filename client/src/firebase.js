@@ -6,11 +6,11 @@ import { initializeApp } from "firebase/app";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: "e-commerce-application-d6b93.firebaseapp.com",
-  projectId: "e-commerce-application-d6b93",
-  storageBucket: "e-commerce-application-d6b93.firebasestorage.app",
-  messagingSenderId: "577295680471",
-  appId: "1:577295680471:web:fb610fd50aaa4e30840192"
+  authDomain: "flipcard-clone.firebaseapp.com",
+  projectId: "flipcard-clone",
+  storageBucket: "flipcard-clone.firebasestorage.app",
+  messagingSenderId: "703048871997",
+  appId: "1:703048871997:web:7a762a850657acc2b0fa54"
 };
 
 // Initialize Firebase

@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { signInFailure, signInStart, signInSuccess } from '../redux/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
 import OAuth from '../components/OAuth';
 
 export default function SignIn() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
-  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -40,16 +40,18 @@ export default function SignIn() {
 
     try {
       dispatch(signInStart());
-      const res = await fetch('/api/auth/signin', {
+      const res = await fetch('http://localhost:5000/api/auth/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // 🟢 Important for cookies
         body: JSON.stringify(formData),
       });
+
       const data = await res.json();
 
-      if (data.success === false) {
+      if (!res.ok) {
         dispatch(signInFailure(data));
         return;
       }
@@ -61,8 +63,8 @@ export default function SignIn() {
       } else {
         navigate('/profile');
       }
-    } catch (error) {
-      dispatch(signInFailure(error));
+    } catch (err) {
+      dispatch(signInFailure({ message: 'Something went wrong. Try again.' }));
     }
   };
 
@@ -75,44 +77,52 @@ export default function SignIn() {
           placeholder='Email'
           id='email'
           className='bg-slate-100 p-3 rounded-lg'
+          value={formData.email}
           onChange={handleChange}
         />
-        {errors.email && <p className="text-red-500">{errors.email}</p>}
+        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+
         <div className='relative'>
           <input
             type={showPassword ? 'text' : 'password'}
             placeholder='Password'
             id='password'
             className='bg-slate-100 p-3 rounded-lg w-full'
+            value={formData.password}
             onChange={handleChange}
           />
-          {errors.password && <p className="text-red-500">{errors.password}</p>}
+          {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
           <button
             type='button'
             onClick={() => setShowPassword(!showPassword)}
-            className='absolute inset-y-0 right-3 flex items-center'
+            className='absolute inset-y-0 right-3 flex items-center text-sm text-blue-500'
           >
             {showPassword ? 'Hide' : 'Show'}
           </button>
         </div>
+
         <button
           disabled={loading}
           className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'
         >
           {loading ? 'Loading...' : 'Sign In'}
         </button>
+
         <OAuth />
       </form>
 
-      <div className='flex gap-2 mt-5 '>
-        <p>Dont Have an account?</p>
+      <div className='flex gap-2 mt-5'>
+        <p>Don't have an account?</p>
         <Link to='/sign-up'>
-          <span className='text-blue-500'>Sign up</span>
+          <span className='text-blue-500'>Sign Up</span>
         </Link>
       </div>
-      <p className='text-red-700 mt-5'>
-        {error ? error.message || 'Something went wrong!' : ''}
-      </p>
+
+      {error && (
+        <p className='text-red-700 mt-5 text-center'>
+          {error.message || 'Something went wrong'}
+        </p>
+      )}
     </div>
   );
 }

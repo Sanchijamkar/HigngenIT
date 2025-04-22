@@ -58,7 +58,7 @@ const CourseDetail = () => {
       </div>
     </div>
     <footer className="bg-blue-600 text-white py-6 text-center">
-    <p>&copy; 2024 EduCode. Empowering the next generation of coders.</p>
+    <p>&copy; 2024 HighGenIT. Empowering the next generation of coders.</p>
   </footer>
 </div>
   );

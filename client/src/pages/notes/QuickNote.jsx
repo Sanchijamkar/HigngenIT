@@ -22,7 +22,7 @@ export default function QuickNote() {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:3000/api/create/createNote', {
+      const res = await fetch('http://localhost:5000/api/create/createNote', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -94,9 +94,9 @@ export default function QuickNote() {
           onChange={handleChange}
         >
           <option value="">Select Language</option>
-          <option value="PYTHON">Python</option>
-          <option value="C++">C++</option>
-          <option value="JAVA">Java</option>
+          <option value="PYTHON">Frontend Technology</option>
+          <option value="C++">Backend Technology</option>
+          <option value="JAVA">FullStack Technology</option>
         </select>
         
         <label htmlFor='Content' className='text-lg font-medium'>Content:</label>

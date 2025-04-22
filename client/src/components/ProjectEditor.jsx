@@ -127,9 +127,9 @@ const ProjectEditor = () => {
               className={`border ${isDarkMode ? "bg-gray-700 text-white" : "bg-white text-black"} px-4 py-2 rounded w-48`}
               value={language}
             >
-              <option value="java">Java</option>
-              <option value="python">Python</option>
-              <option value="cpp17">C/C++</option>
+              <option value="java">Frontend Technology</option>
+              <option value="python">Backend Technology</option>
+              <option value="cpp17">FullStack Technology</option>
             </select>
             <button
               onClick={runCode}

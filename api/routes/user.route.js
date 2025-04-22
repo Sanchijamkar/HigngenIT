@@ -1,22 +1,18 @@
+// api/routes/user.route.js
 import express from 'express';
+import { authenticateUser } from '../middlewares/auth.js';  // ✅ Named import
+
 import {
-  test,
-  updateUser,
-  deleteUser,
-  verifyAdmin,
   getAllUsers,
-} from '../controllers/user.controller.js';
-import { verifyToken } from '../utils/verifyUser.js';
+  updateUser,
+  deleteUser
+} from '../controllers/userController.js';
 
 const router = express.Router();
 
-router.get('/', test);
-router.post('/update/:id', verifyToken, updateUser);
-router.delete('/delete/:id', verifyToken, deleteUser);
-router.get('/all', verifyToken, getAllUsers);
-
-router.get('/admin', verifyToken, verifyAdmin, (req, res) => {
-  res.json('Admin route, only accessible by admin.');
-});
+// Routes for user management
+router.get('/users', authenticateUser, getAllUsers);
+router.put('/users/:userId', authenticateUser, updateUser);
+router.delete('/users/:userId', authenticateUser, deleteUser);
 
 export default router;

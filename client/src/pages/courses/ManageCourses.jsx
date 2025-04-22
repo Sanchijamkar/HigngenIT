@@ -109,10 +109,10 @@ const ManageCourses = () => {
         className="border border-gray-300 p-2 rounded-lg mb-4 w-full"
       >
         <option value="All">All Languages</option>
-        <option value="C">C</option>
-        <option value="C++">C++</option>
-        <option value="Java">Java</option>
-        <option value="Python">Python</option>
+        <option value="C">Frontend Languages</option>
+        <option value="C++">Backend Languages</option>
+        <option value="Java">FullStack Languages</option>
+        <option value="Python">React Js</option>
       </select>
 
       {/* List of Courses */}

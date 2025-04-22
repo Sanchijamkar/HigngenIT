@@ -59,85 +59,94 @@ const EditCourse = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">Edit Course</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="container mx-auto p-8 bg-gray-50 min-h-screen">
+      <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Edit Course</h1>
+      <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow-md">
         <div>
-          <label className="block text-gray-700">Title</label>
+          <label className="block text-gray-700 font-semibold">Title</label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-            className="border border-gray-300 rounded-lg p-2 w-full"
+            className="border border-gray-300 rounded-lg p-3 w-full"
           />
         </div>
 
         <div>
-          <label className="block text-gray-700">Author</label>
+          <label className="block text-gray-700 font-semibold">Author</label>
           <input
             type="text"
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
             required
-            className="border border-gray-300 rounded-lg p-2 w-full"
+            className="border border-gray-300 rounded-lg p-3 w-full"
           />
         </div>
 
         <div>
-          <label className="block text-gray-700">Language</label>
+          <label className="block text-gray-700 font-semibold">Language</label>
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="border border-gray-300 rounded-lg p-2 w-full"
+            className="border border-gray-300 rounded-lg p-3 w-full"
           >
-            <option value="C">C</option>
-            <option value="C++">C++</option>
-            <option value="Java">Java</option>
-            <option value="Python">Python</option>
+            <option value="C">Frontend Technology</option>
+            <option value="C++">Backend Technology</option>
+            <option value="Java">Full Stack Technology</option>
+            <option value="Python">ReactJs</option>
           </select>
         </div>
 
         <div>
-          <label className="block text-gray-700">Description</label>
+          <label className="block text-gray-700 font-semibold">Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
-            className="border border-gray-300 rounded-lg p-2 w-full"
+            className="border border-gray-300 rounded-lg p-3 w-full"
           />
         </div>
 
-        <h2 className="text-xl font-bold">Content Sections</h2>
+        <h2 className="text-xl font-bold text-gray-800 mt-6">Content Sections</h2>
         {content.map((section, index) => (
-          <div key={index} className="border border-gray-300 rounded-lg p-4 mb-4">
-            <label className="block text-gray-700">Section Title</label>
+          <div key={index} className="border border-gray-300 rounded-lg p-6 mb-6 bg-gray-50">
+            <label className="block text-gray-700 font-semibold">Section Title</label>
             <input
               type="text"
               name="sectionTitle"
               value={section.sectionTitle}
               onChange={(e) => handleContentChange(index, e)}
               required
-              className="border border-gray-300 rounded-lg p-2 w-full"
+              className="border border-gray-300 rounded-lg p-3 w-full mb-4"
             />
 
-            <label className="block text-gray-700 mt-2">Section Content</label>
+            <label className="block text-gray-700 font-semibold">Section Content</label>
             <textarea
               name="sectionContent"
               value={section.sectionContent}
               onChange={(e) => handleContentChange(index, e)}
               required
-              className="border border-gray-300 rounded-lg p-2 w-full"
+              className="border border-gray-300 rounded-lg p-3 w-full"
             />
           </div>
         ))}
-        <button type="button" onClick={handleAddSection} className="bg-blue-600 text-white px-4 py-2 rounded-lg">
+        <button
+          type="button"
+          onClick={handleAddSection}
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300"
+        >
           Add Section
         </button>
 
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-          Update Course
-        </button>
+        <div className="mt-6 flex justify-center">
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300"
+          >
+            Update Course
+          </button>
+        </div>
       </form>
     </div>
   );

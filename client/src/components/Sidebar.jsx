@@ -14,17 +14,17 @@ export default function Sidebar() {
       </h2>
       <ul className="p-4">
         
-        {/* Links only visible to admins */}
+        {/* Admin Links */}
         {currentUser.isAdmin && (
           <>
             <li className="mb-4">
-              <Link to="/manage-users" className="hover:text-gray-300">
-                Manage Users
+              <Link to="/admin-profile" className="hover:text-gray-300">
+                Admin Profile
               </Link>
             </li>
             <li className="mb-4">
-              <Link to="/messages" className="hover:text-gray-300">
-                Contact Messages
+              <Link to="/manage-users" className="hover:text-gray-300">
+                Manage Users
               </Link>
             </li>
             <li className="mb-4">
@@ -50,12 +50,12 @@ export default function Sidebar() {
           </>
         )}
 
-        {/* Links only visible to regular users */}
+        {/* Regular User Links */}
         {!currentUser.isAdmin && (
           <>
             <li className="mb-4">
-              <Link to="/projects" className="hover:text-gray-300">
-                Projects
+              <Link to="/profile" className="hover:text-gray-300">
+                My Profile
               </Link>
             </li>
             <li className="mb-4">
@@ -64,29 +64,13 @@ export default function Sidebar() {
               </Link>
             </li>
             <li className="mb-4">
-              <Link to="/user/questions" className="hover:text-gray-300">
-                My Questions
-              </Link>
-            </li>
-            <li className="mb-4">
-              <Link to="/questions/new" className="hover:text-gray-300">
-                Add Questions
-              </Link>
-            </li>
-            <li className="mb-4">
               <Link to="/quicknote" className="hover:text-gray-300">
                 Add Notes
               </Link>
             </li>
-            <li className="mb-4">
-              <Link to="/mynotes" className="hover:text-gray-300">
-                Manage Notes
-              </Link>
-            </li>
-            
           </>
         )}
       </ul>
     </div>
   );
-};
+}

@@ -6,58 +6,52 @@ import cors from 'cors';
 
 import userRoutes from './routes/user.route.js';
 import authRoutes from './routes/auth.route.js';
+//import questionRoutes from './routes/question.routes.js'; // ✅ Use the correct file name
+import feedbackRoutes from './routes/feedback.js';
+import noteRoutes from './routes/notes.js';
+import questionRoutes from './routes/question.js';
+import courseRoutes from './routes/courseRoutes.js';
 
-// Load environment variables
+
+
 dotenv.config();
-
-// Initialize the Express app
 const app = express();
 
-// Middleware
 app.use(express.json());
 app.use(cookieParser());
-
-// Configure CORS
 app.use(cors({
-  origin: 'http://localhost:5173',  // Allow requests from your frontend domain
-  credentials: true,                // Allow credentials like cookies, headers
+  origin: 'http://localhost:5173',
+  credentials: true,
 }));
 
-// MongoDB connection using Mongoose directly
 mongoose.connect(process.env.MONGO, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => {
-  console.log('Connected to MongoDB');
-})
+.then(() => console.log('Connected to MongoDB'))
 .catch((err) => {
   console.error('MongoDB connection error:', err);
-  process.exit(1); // Exit the process if MongoDB connection fails
+  process.exit(1);
 });
 
-// Routes (make sure your routes are properly set up and imported)
-// IDE run code routes
+app.use("/api/user", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/questions", questionRoutes);
+app.use("/api/feedback", feedbackRoutes);
+app.use("/api/create", noteRoutes);
+app.use('/api/courses', courseRoutes);
 
-// Define API routes
-app.use("/api/user", userRoutes);  // User management routes
-app.use("/api/auth", authRoutes);  // Authentication routes
-
-
-
-// Global error handling middleware
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Internal server error';
-  return res.status(statusCode).json({
+  res.status(statusCode).json({
     success: false,
     message,
     statusCode,
   });
 });
 
-// Start the server
-const PORT = process.env.PORT || 3000; // Use PORT from .env or default to 3000
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

@@ -109,9 +109,9 @@ export default function UpdateNote() {
                 className="p-2 w-full rounded-lg border border-gray-400"
             >
                 <option value="">Select a language</option>
-                <option value="Java">Java</option>
-                <option value="Python">Python</option>
-                <option value="C++">C++</option>
+                <option value="Java">Frontend Technology</option>
+                <option value="Python">Backend Technology</option>
+                <option value="C++">FullStack Technology</option>
                 {/* Add more options as needed */}
             </select>
         </div>

@@ -136,7 +136,7 @@ const IDELayout = () => {
           }`}
       >
         <div className="container mx-auto text-center">
-          <h1 className="text-3xl font-bold">EduCode IDE</h1>
+          <h1 className="text-3xl font-bold">HighGenIT IDE</h1>
           <div className="mt-4 flex justify-center items-center space-x-4">
             <select
               onChange={(e) => setLanguage(e.target.value)}

@@ -33,7 +33,7 @@ export default function Header() {
         <div className="flex items-center space-x-2">
           <img src={logo} alt="EduCode Logo" className="h-16" /> {/* Increased size */}
           <Link to='/'>
-            <h1 className='font-bold text-2xl'>EduCode</h1> {/* Increased size */}
+            <h1 className='font-bold text-2xl'>HighGenIT</h1> {/* Increased size */}
           </Link>
         </div>
 
@@ -48,12 +48,8 @@ export default function Header() {
           <li>
             <Link to='/contact'>Contact Us</Link>
           </li>
-          <li>
-            <Link to="/collections">Collections</Link>
-          </li>
-          <li>
-            <Link to="/questions">Feedbacks</Link>
-          </li>
+          
+          
           <li className="relative">
             {/* Dropdown for Courses */}
             <button onClick={toggleDropdown} className="focus:outline-none">
@@ -66,28 +62,28 @@ export default function Header() {
                   className="block px-4 py-2 hover:bg-gray-100"
                   onClick={() => setDropdownOpen(false)} // Close on click
                 >
-                  C
+                  Frontend Developer
                 </Link>
                 <Link
                   to="/courses/cpp"
                   className="block px-4 py-2 hover:bg-gray-100"
                   onClick={() => setDropdownOpen(false)} // Close on click
                 >
-                  C++
+                  Backend Developer
                 </Link>
                 <Link
                   to="/courses/java"
                   className="block px-4 py-2 hover:bg-gray-100"
                   onClick={() => setDropdownOpen(false)} // Close on click
                 >
-                  Java
+                  Full Stack Developer
                 </Link>
                 <Link
                   to="/courses/python"
                   className="block px-4 py-2 hover:bg-gray-100"
                   onClick={() => setDropdownOpen(false)} // Close on click
                 >
-                  Python
+                  React Js
                 </Link>
               </div>
             )}
