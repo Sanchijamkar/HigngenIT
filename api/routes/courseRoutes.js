@@ -1,43 +1,26 @@
-// api/routes/courseRoutes.js
 import express from 'express';
-import mongoose from 'mongoose';
-import { authenticateUser } from '../middlewares/auth.js'; // Corrected import (named export)
-import { Course } from '../models/course.js'; // Adjust if you use a named export for Course model
-import User from '../models/User.js'; // Adjust if needed
+import Course from '../models/course.model.js'; // Adjust path as needed
 
 const router = express.Router();
 
-// Enroll route
-// api/routes/courseRoutes.js
-router.post('/enroll', authenticateUser, async (req, res) => {
+// Route to get courses by category
+router.get('/category/:category', async (req, res) => {
+  const { category } = req.params; // Get category from the URL
+
   try {
-    const { courseId } = req.body;
-    const userId = req.user?._id;
+    const courses = await Course.find({ category: category }); // Query courses by category
 
-    if (!courseId || !userId) {
-      return res.status(400).json({ message: 'Course ID or User ID missing' });
+    if (!courses || courses.length === 0) {
+      return res.status(404).json({ message: `No courses found for category: ${category}` });
     }
 
-    const course = await Course.findById(courseId);
-    if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
-    }
+    return res.json(courses); // Send courses as a response
 
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    if (user.enrolledCourses.includes(courseId)) {
-      return res.status(400).json({ message: 'Already enrolled' });
-    }
-
-    user.enrolledCourses.push(courseId);
-    await user.save();
-
-    res.status(200).json({ message: 'Enrolled successfully!' });
   } catch (error) {
-    console.error('🔥 Enrollment Error:', error);
-    res.status(500).json({ message: 'Internal Server Error during enrollment.' });
+    console.error('Error fetching courses:', error);
+    return res.status(500).json({ message: 'Error fetching courses' });
   }
 });
+
+
+export default router;

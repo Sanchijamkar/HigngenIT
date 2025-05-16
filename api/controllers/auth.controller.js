@@ -1,101 +1,75 @@
-//import User from '../models/user.js';
-import bcryptjs from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { errorHandler } from '../utils/error.js';
+import User from '../models/user.js';  // Correct import
 
-// @desc    Register a new user
-export const signup = async (req, res, next) => {
+// Signup Controller
+export const signup = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { name, email, password, phone, gender, address, qualification, course, trainingMode } = req.body;
 
-    if (!username || !email || !password) {
-      return next(errorHandler(400, 'All fields are required'));
+    if (!name || !email || !password || !phone || !gender || !address || !qualification || !course || !trainingMode) {
+      return res.status(400).json({ message: 'All fields are required!' });
     }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return next(errorHandler(409, 'Email is already registered'));
+      return res.status(400).json({ message: 'Email already exists!' });
     }
 
-    const hashedPassword = bcryptjs.hashSync(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = new User({
-      username,
+      name,
       email,
       password: hashedPassword,
+      phone,
+      gender,
+      address,
+      qualification,
+      course,
+      trainingMode,
     });
 
     await newUser.save();
 
-    res.status(201).json({
-      message: 'User registered successfully',
-      userId: newUser._id,
-    });
-  } catch (err) {
-    console.error('Signup error:', err);
-    next(errorHandler(500, 'Error registering user'));
+    res.status(201).json({ message: 'User registered successfully!' });
+  } catch (error) {
+    console.error('Signup error:', error);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 };
 
-// @desc    Login user and return JWT
-export const signin = async (req, res, next) => {
+
+// Signin Controller
+export const signin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return next(errorHandler(400, 'Email and password are required'));
+      return res.status(400).json({ message: 'Email and password are required!' });
     }
 
-    const validUser = await User.findOne({ email });
-    if (!validUser) return next(errorHandler(404, 'User not found'));
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found!' });
+    }
 
-    const isMatch = bcryptjs.compareSync(password, validUser.password);
-    if (!isMatch) return next(errorHandler(401, 'Invalid password'));
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid password!' });
+    }
 
     const token = jwt.sign(
-      { id: validUser._id, isAdmin: validUser.isAdmin },
-      process.env.JWT_SECRET,
-      { expiresIn: '1d' }
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET || 'your_jwt_secret', // Replace with your secure secret
+      { expiresIn: '7d' }
     );
 
-    const { password: _, ...userData } = validUser._doc;
+    const { password: pw, ...userWithoutPassword } = user._doc; // Remove password from response
 
-    res
-      .cookie('access_token', token, {
-        httpOnly: true,
-        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 24 * 60 * 60 * 1000,
-      })
-      .status(200)
-      .json({
-        ...userData,
-        token,
-        role: validUser.isAdmin ? 'admin' : 'user',
-        message: 'Login successful',
-      });
+    res.status(200).json({ token, user: userWithoutPassword });
   } catch (error) {
     console.error('Signin error:', error);
-    next(errorHandler(500, 'Internal server error'));
-  }
-};
-
-// @desc    Logout the user
-export const signout = (req, res) => {
-  res.clearCookie('access_token', {
-    httpOnly: true,
-    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-    secure: process.env.NODE_ENV === 'production',
-  });
-  res.status(200).json({ message: 'Signout successful' });
-};
-
-// @desc    Google Signin - To be implemented
-export const google = async (req, res, next) => {
-  try {
-    // You can integrate Google OAuth here
-    return res.status(501).json({ message: 'Google login not implemented yet' });
-  } catch (error) {
-    console.error('Google sign-in error:', error);
-    next(errorHandler(500, 'Google login failed'));
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 };

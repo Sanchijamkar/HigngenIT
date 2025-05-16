@@ -83,16 +83,16 @@ export default function Home() {
         <h2 className="text-4xl font-bold mb-10">HighGenIT by the Numbers</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div className="p-6">
-            <h3 className="text-5xl font-bold text-blue-600">50K+</h3>
-            <p className="text-xl">Active Learners</p>
+            <h3 className="text-5xl font-bold text-blue-600">11+</h3>
+            <p className="text-xl">Years Experience</p>
           </div>
           <div className="p-6">
-            <h3 className="text-5xl font-bold text-blue-600">200+</h3>
-            <p className="text-xl">Courses Available</p>
+            <h3 className="text-5xl font-bold text-blue-600">3000+</h3>
+            <p className="text-xl">Students Trained</p>
           </div>
           <div className="p-6">
-            <h3 className="text-5xl font-bold text-blue-600">1M+</h3>
-            <p className="text-xl">Lines of Code Written</p>
+            <h3 className="text-5xl font-bold text-blue-600">100+</h3>
+            <p className="text-xl">Students Placed</p>
           </div>
           <div className="p-6">
             <h3 className="text-5xl font-bold text-blue-600">99%</h3>
@@ -194,15 +194,15 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div className="p-6 rounded-lg shadow-lg bg-white">
               <p className="text-gray-600 mb-4">"HighGenIT helped me transition from a complete beginner to a confident coder!"</p>
-              <h4 className="font-semibold text-xl">- John Doe</h4>
+              <h4 className="font-semibold text-xl">- Sanchi</h4>
             </div>
             <div className="p-6 rounded-lg shadow-lg bg-white">
               <p className="text-gray-600 mb-4">"The tutorials and quizzes made learning to code fun and engaging."</p>
-              <h4 className="font-semibold text-xl">- Jane Smith</h4>
+              <h4 className="font-semibold text-xl">- Swapanil</h4>
             </div>
             <div className="p-6 rounded-lg shadow-lg bg-white">
               <p className="text-gray-600 mb-4">"HighGenIT's real-time IDE is perfect for practicing coding while learning!"</p>
-              <h4 className="font-semibold text-xl">- Alex Johnson</h4>
+              <h4 className="font-semibold text-xl">- Tejas</h4>
             </div>
           </div>
         </div>

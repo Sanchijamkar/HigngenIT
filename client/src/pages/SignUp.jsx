@@ -1,9 +1,19 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import OAuth from '../components/OAuth';
 
-export default function SignUp() {
-  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+export default function Signup() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    phone: '',
+    gender: '',
+    address: '',
+    qualification: '',
+    course: '',
+    trainingMode: '',
+  });
+
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -11,23 +21,28 @@ export default function SignUp() {
 
   const validate = () => {
     const newErrors = {};
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!formData.username || formData.username.length < 4) {
-      newErrors.username = 'Username must be at least 4 characters long';
+    if (!formData.name || formData.name.length < 4) {
+      newErrors.name = 'Name must be at least 4 characters';
     }
-    if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Invalid email';
     }
     if (!formData.password || formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters long';
+      newErrors.password = 'Password must be at least 8 characters';
     }
-
+    if (!formData.phone || !/^\d{10}$/.test(formData.phone)) {
+      newErrors.phone = 'Valid 10-digit phone number required';
+    }
+    if (!formData.gender) newErrors.gender = 'Gender is required';
+    if (!formData.address) newErrors.address = 'Address is required';
+    if (!formData.qualification) newErrors.qualification = 'Qualification is required';
+    if (!formData.course) newErrors.course = 'Course is required';
+    if (!formData.trainingMode) newErrors.trainingMode = 'Training mode is required';
     return newErrors;
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    setFormData({ ...formData, [e.target.id || e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -40,13 +55,9 @@ export default function SignUp() {
 
     try {
       setLoading(true);
-      setErrors({});
-      const res = await fetch('http://localhost:5000/api/auth/signup', {
+      const res = await fetch('http://localhost:5001/api/auth/signup', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include', // ✅ This allows cookies
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
@@ -54,74 +65,98 @@ export default function SignUp() {
       setLoading(false);
 
       if (!res.ok) {
-        setErrors({ server: data.message || 'Sign up failed. Please try again.' });
+        setErrors({ server: data.message || 'Signup failed' });
         return;
       }
 
       navigate('/sign-in');
-    } catch (error) {
+    } catch (err) {
       setLoading(false);
-      setErrors({ server: 'Something went wrong. Please try again.' });
+      setErrors({ server: 'Something went wrong' });
     }
   };
 
   return (
-    <div className='p-3 max-w-lg mx-auto'>
-      <h1 className='text-3xl text-center font-semibold my-7'>Sign Up</h1>
-      <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
-        <input
-          type='text'
-          placeholder='Username'
-          id='username'
-          className='bg-slate-100 p-3 rounded-lg'
-          onChange={handleChange}
-        />
-        {errors.username && <p className="text-red-500">{errors.username}</p>}
+    <div className='flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 via-pink-500 to-red-500'>
+      <div className='bg-white p-10 rounded-lg shadow-lg w-full sm:w-96'>
+        <h1 className='text-4xl text-center font-semibold text-gray-700 mb-8'>Create Your Account</h1>
+        <form onSubmit={handleSubmit} className='space-y-6'>
+          {/* Name, Email, Password */}
+          <input id='name' placeholder='Full Name' onChange={handleChange} className='input' />
+          {errors.name && <p className='text-red-500 text-sm'>{errors.name}</p>}
 
-        <input
-          type='email'
-          placeholder='Email'
-          id='email'
-          className='bg-slate-100 p-3 rounded-lg'
-          onChange={handleChange}
-        />
-        {errors.email && <p className="text-red-500">{errors.email}</p>}
+          <input id='email' type='email' placeholder='Email' onChange={handleChange} className='input' />
+          {errors.email && <p className='text-red-500 text-sm'>{errors.email}</p>}
 
-        <div className='relative'>
-          <input
-            type={showPassword ? 'text' : 'password'}
-            placeholder='Password'
-            id='password'
-            className='bg-slate-100 p-3 rounded-lg w-full'
-            onChange={handleChange}
-          />
-          {errors.password && <p className="text-red-500">{errors.password}</p>}
-          <button
-            type='button'
-            onClick={() => setShowPassword(!showPassword)}
-            className='absolute inset-y-0 right-3 flex items-center text-sm text-gray-600'
-          >
-            {showPassword ? 'Hide' : 'Show'}
+          <input id='phone' placeholder='Phone Number' onChange={handleChange} className='input' />
+          {errors.phone && <p className='text-red-500 text-sm'>{errors.phone}</p>}
+
+          <select id='gender' onChange={handleChange} value={formData.gender} className='input'>
+            <option value='' disabled>Select Gender</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+          {errors.gender && <p className='text-red-500 text-sm'>{errors.gender}</p>}
+
+          <input id='address' placeholder='Address' onChange={handleChange} className='input' />
+          {errors.address && <p className='text-red-500 text-sm'>{errors.address}</p>}
+
+          <select id='qualification' onChange={handleChange} value={formData.qualification} className='input'>
+            <option value='' disabled>Select Qualification</option>
+            <option>B.Tech</option>
+            <option>M.Tech</option>
+            <option>MCA</option>
+            <option>MBA</option>
+            <option>Other</option>
+          </select>
+          {errors.qualification && <p className='text-red-500 text-sm'>{errors.qualification}</p>}
+
+          <select id='course' onChange={handleChange} value={formData.course} className='input'>
+            <option value='' disabled>Select Course</option>
+            <option>Frontend</option>
+            <option>Backend</option>
+            <option>Fullstack</option>
+            <option>Java</option>
+            <option>React</option>
+          </select>
+          {errors.course && <p className='text-red-500 text-sm'>{errors.course}</p>}
+
+          {/* Training Mode Radio */}
+          <div className='space-y-1'>
+            <label className='block text-gray-700'>Training Mode:</label>
+            <label><input type='radio' name='trainingMode' value='Online' onChange={handleChange} /> Online Training</label><br />
+            <label><input type='radio' name='trainingMode' value='Classroom' onChange={handleChange} /> Classroom Training</label>
+            {errors.trainingMode && <p className='text-red-500 text-sm'>{errors.trainingMode}</p>}
+          </div>
+
+          {/* Password */}
+          <div className='relative'>
+            <input
+              id='password'
+              type={showPassword ? 'text' : 'password'}
+              placeholder='Password'
+              onChange={handleChange}
+              className='input'
+            />
+            <button type='button' className='absolute right-4 top-3 text-purple-500' onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+            {errors.password && <p className='text-red-500 text-sm'>{errors.password}</p>}
+          </div>
+
+          <button type='submit' disabled={loading} className='btn'>
+            {loading ? 'Registering...' : 'Create Account'}
           </button>
-        </div>
+        </form>
 
-        <button
-          disabled={loading}
-          className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'
-        >
-          {loading ? 'Loading...' : 'Sign Up'}
-        </button>
-        <OAuth />
-      </form>
+        <p className='text-center text-sm mt-4'>
+          Already have an account?{' '}
+          <Link to='/sign-in' className='text-purple-500 hover:underline'>Sign In</Link>
+        </p>
 
-      <div className='flex gap-2 mt-5'>
-        <p>Have an account?</p>
-        <Link to='/sign-in'>
-          <span className='text-blue-500'>Sign in</span>
-        </Link>
+        {errors.server && <p className='text-red-500 text-center mt-3'>{errors.server}</p>}
       </div>
-
-      {errors.server && <p className='text-red-700 mt-5'>{errors.server}</p>}
     </div>
   );
 }

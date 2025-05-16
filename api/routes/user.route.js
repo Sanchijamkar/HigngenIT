@@ -1,7 +1,7 @@
-// api/routes/user.route.js
-import express from 'express';
-import { authenticateUser } from '../middlewares/auth.js';  // ✅ Named import
+// Routes/user.route.js
 
+import express from 'express';
+import { authenticateUser } from '../middlewares/auth.js';  // Corrected import for named export
 import {
   getAllUsers,
   updateUser,

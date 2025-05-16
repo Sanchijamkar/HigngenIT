@@ -1,114 +1,165 @@
-import { Link } from "react-router-dom";
-import { useSelector } from 'react-redux';
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { Menu, X } from "lucide-react";
 import logo from "./logo.png";
-import { useState, useEffect, useRef } from 'react'; // Import useEffect and useRef for outside click detection
 
 export default function Header() {
-  const { currentUser } = useSelector((state) => state.user); // Get currentUser from Redux store
-  const [dropdownOpen, setDropdownOpen] = useState(false); // State to manage dropdown visibility
-  const dropdownRef = useRef(null); // Ref for the dropdown
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
-  // Toggle dropdown visibility
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
+  const userToken = localStorage.getItem("userToken");
+  const adminToken = localStorage.getItem("adminToken");
 
-  // Close dropdown when clicking outside of it
+  // Retrieve the user's name from localStorage
+  const userName = localStorage.getItem("userName");
+
+  // Course Categories
+  const courseCategories = [
+    { name: "Frontend", path: "/courses/frontend" },
+    { name: "Backend", path: "/courses/backend" },
+    { name: "Fullstack", path: "/courses/fullstack" },
+    { name: "React", path: "/courses/react" },
+  ];
+
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setDropdownOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const signOutUser = () => {
+    localStorage.removeItem("userToken");
+    localStorage.removeItem("userName");
+    navigate("/");
+  };
+
+  const signOutAdmin = () => {
+    localStorage.removeItem("adminToken");
+    navigate("/");
+  };
+
   return (
-    <div className="bg-slate-200">
-      <div className="flex justify-between items-center max-w-full mx-auto py-2 px-9">
-        {/* Left Section: Logo and Name */}
-        <div className="flex items-center space-x-2">
-          <img src={logo} alt="EduCode Logo" className="h-16" /> {/* Increased size */}
-          <Link to='/'>
-            <h1 className='font-bold text-2xl'>HighGenIT</h1> {/* Increased size */}
-          </Link>
+    <header className="bg-slate-200 shadow-md">
+      <div className="max-w-full mx-auto flex justify-between items-center px-6 py-3 relative">
+        {/* Logo */}
+        <div className="flex items-center gap-2">
+          <img src={logo} alt="HighGenIT Logo" className="h-12" />
+          <Link to="/" className="text-xl font-bold text-gray-800">HighGenIT</Link>
         </div>
 
-        {/* Right Section: Navigation Links */}
-        <ul className='flex gap-4 items-center'>
-          <li>
-            <Link to='/'>Home</Link>
-          </li>
-          <li>
-            <Link to='/about'>About Us</Link>
-          </li>
-          <li>
-            <Link to='/contact'>Contact Us</Link>
-          </li>
-          
-          
-          <li className="relative">
-            {/* Dropdown for Courses */}
-            <button onClick={toggleDropdown} className="focus:outline-none">
+        {/* Hamburger (mobile) */}
+        <div className="lg:hidden">
+          <button
+            onClick={() => setMenuOpen(o => !o)}
+            className="focus:outline-none"
+            aria-expanded={menuOpen ? "true" : "false"}
+            aria-controls="mobile-menu"
+          >
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+
+        {/* Desktop nav */}
+        <nav className="hidden lg:flex items-center gap-6">
+          <Link to="/" className="hover:text-blue-600">Home</Link>
+          <Link to="/about" className="hover:text-blue-600">About</Link>
+          <Link to="/contact" className="hover:text-blue-600">Contact</Link>
+
+          {/* Courses dropdown */}
+          <div className="relative" ref={dropdownRef}>
+            <button
+              onClick={() => setDropdownOpen(o => !o)}
+              className="hover:text-blue-600"
+              aria-expanded={dropdownOpen ? "true" : "false"}
+              aria-controls="courses-dropdown"
+            >
               Courses
             </button>
             {dropdownOpen && (
-              <div ref={dropdownRef} className="absolute right-0 mt-2 bg-white border border-gray-300 rounded-md shadow-lg z-10">
-                <Link
-                  to="/courses/c"
-                  className="block px-4 py-2 hover:bg-gray-100"
-                  onClick={() => setDropdownOpen(false)} // Close on click
-                >
-                  Frontend Developer
-                </Link>
-                <Link
-                  to="/courses/cpp"
-                  className="block px-4 py-2 hover:bg-gray-100"
-                  onClick={() => setDropdownOpen(false)} // Close on click
-                >
-                  Backend Developer
-                </Link>
-                <Link
-                  to="/courses/java"
-                  className="block px-4 py-2 hover:bg-gray-100"
-                  onClick={() => setDropdownOpen(false)} // Close on click
-                >
-                  Full Stack Developer
-                </Link>
-                <Link
-                  to="/courses/python"
-                  className="block px-4 py-2 hover:bg-gray-100"
-                  onClick={() => setDropdownOpen(false)} // Close on click
-                >
-                  React Js
-                </Link>
+              <div id="courses-dropdown" className="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-20">
+                {courseCategories.map((course) => (
+                  <Link
+                    key={course.path}
+                    to={course.path}
+                    className="block px-4 py-2 hover:bg-gray-100"
+                  >
+                    {course.name}
+                  </Link>
+                ))}
               </div>
             )}
-          </li>
+          </div>
 
-          
-
-          {/* Conditional rendering for the profile picture */}
-          {currentUser ? (
-            <li>
-              <Link to={currentUser.isAdmin ? '/admin-profile' : '/profile'}>
-                <img
-                  src={currentUser.profilePicture}
-                  alt='profile'
-                  className='h-8 w-8 rounded-full object-cover'
-                />
-              </Link>
-            </li>
+          {/* User and Admin auth links */}
+          {userToken ? (
+            <>
+              <span className="text-gray-800 font-semibold">{userName}</span> {/* Display user's name */}
+              <Link to="/profile" className="hover:text-blue-600">Profile</Link>
+              <button onClick={signOutUser} className="hover:text-red-600">Sign Out</button>
+            </>
           ) : (
-            <li>
-              <Link to='/sign-in'>Sign In</Link>
-            </li>
+            <Link to="/sign-in" className="hover:text-blue-600">User Sign In</Link>
           )}
-        </ul>
+
+          {adminToken ? (
+            <>
+              <Link to="/admin" className="hover:text-blue-600 font-semibold">Admin Panel</Link>
+              <button onClick={signOutAdmin} className="hover:text-red-600">Admin Sign Out</button>
+            </>
+          ) : (
+            <Link to="/admin-sign-in" className="hover:text-blue-600">Admin Sign In</Link>
+          )}
+        </nav>
+
+        {/* Mobile menu */}
+        {menuOpen && (
+          <div id="mobile-menu" className="lg:hidden absolute top-full left-0 w-full bg-white shadow z-30 p-4">
+            <Link to="/" className="block py-2">Home</Link>
+            <Link to="/about" className="block py-2">About</Link>
+            <Link to="/contact" className="block py-2">Contact</Link>
+
+            <div className="py-2 border-t">
+              <p className="font-semibold">Courses</p>
+              {courseCategories.map((course) => (
+                <Link
+                  key={course.path}
+                  to={course.path}
+                  className="block pl-4 py-1"
+                >
+                  {course.name}
+                </Link>
+              ))}
+            </div>
+
+            <div className="py-2 border-t">
+              {userToken ? (
+                <>
+                  <Link to="/profile" className="block py-2">Profile</Link>
+                  <button onClick={signOutUser} className="block py-2 text-red-600 text-left">Sign Out</button>
+                </>
+              ) : (
+                <Link to="/sign-in" className="block py-2">User Sign In</Link>
+              )}
+
+              {adminToken ? (
+                <>
+                  <Link to="/admin" className="block py-2">Admin Panel</Link>
+                  <button onClick={signOutAdmin} className="block py-2 text-red-600 text-left">Admin Sign Out</button>
+                </>
+              ) : (
+                <Link to="/admin-sign-in" className="block py-2">Admin Sign In</Link>
+              )}
+            </div>
+          </div>
+        )}
       </div>
-    </div>
+    </header>
   );
 }
+ 

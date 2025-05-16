@@ -1,128 +1,76 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
-import OAuth from '../components/OAuth';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { setCurrentUser } from '../redux/user/userSlice';
 
 export default function SignIn() {
   const [formData, setFormData] = useState({ email: '', password: '' });
-  const [errors, setErrors] = useState({});
-  const [showPassword, setShowPassword] = useState(false);
-  const { loading, error } = useSelector((state) => state.user);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const validate = () => {
-    const newErrors = {};
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
-    }
-    if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters long';
-    }
-
-    return newErrors;
-  };
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-
     try {
-      dispatch(signInStart());
-      const res = await fetch('http://localhost:5000/api/auth/signin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include', // 🟢 Important for cookies
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        dispatch(signInFailure(data));
-        return;
-      }
-
-      dispatch(signInSuccess(data));
-
-      if (data.role === 'admin') {
-        navigate('/admin-profile');
-      } else {
-        navigate('/profile');
-      }
-    } catch (err) {
-      dispatch(signInFailure({ message: 'Something went wrong. Try again.' }));
+      const res = await axios.post('http://localhost:5001/api/auth/signin', formData);
+      localStorage.setItem('token', res.data.token);
+      
+      dispatch(setCurrentUser(res.data.user));
+      navigate('/profile');
+    } catch (error) {
+      alert(error.response?.data?.message || 'Login failed');
     }
   };
 
   return (
-    <div className='p-3 max-w-lg mx-auto'>
-      <h1 className='text-3xl text-center font-semibold my-7'>Sign In</h1>
-      <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
-        <input
-          type='email'
-          placeholder='Email'
-          id='email'
-          className='bg-slate-100 p-3 rounded-lg'
-          value={formData.email}
-          onChange={handleChange}
-        />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-
-        <div className='relative'>
-          <input
-            type={showPassword ? 'text' : 'password'}
-            placeholder='Password'
-            id='password'
-            className='bg-slate-100 p-3 rounded-lg w-full'
-            value={formData.password}
-            onChange={handleChange}
-          />
-          {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200">
+      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+        <h2 className="text-3xl font-bold text-center text-indigo-600 mb-6">Welcome Back 👋</h2>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-600">
+              Email Address
+            </label>
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="Enter your email"
+              onChange={handleChange}
+              className="mt-1 block w-full px-4 py-2 border rounded-xl shadow-sm focus:ring focus:ring-indigo-300 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-600">
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              required
+              placeholder="Enter your password"
+              onChange={handleChange}
+              className="mt-1 block w-full px-4 py-2 border rounded-xl shadow-sm focus:ring focus:ring-indigo-300 focus:outline-none"
+            />
+          </div>
           <button
-            type='button'
-            onClick={() => setShowPassword(!showPassword)}
-            className='absolute inset-y-0 right-3 flex items-center text-sm text-blue-500'
+            type="submit"
+            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-xl hover:bg-indigo-700 transition duration-300"
           >
-            {showPassword ? 'Hide' : 'Show'}
+            Sign In
           </button>
-        </div>
-
-        <button
-          disabled={loading}
-          className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'
-        >
-          {loading ? 'Loading...' : 'Sign In'}
-        </button>
-
-        <OAuth />
-      </form>
-
-      <div className='flex gap-2 mt-5'>
-        <p>Don't have an account?</p>
-        <Link to='/sign-up'>
-          <span className='text-blue-500'>Sign Up</span>
-        </Link>
+          <p className="text-center text-sm text-gray-500 mt-3">
+            Don't have an account?{' '}
+            <a href="/sign-up" className="text-indigo-600 font-medium hover:underline">
+              Sign Up
+            </a>
+          </p>
+        </form>
       </div>
-
-      {error && (
-        <p className='text-red-700 mt-5 text-center'>
-          {error.message || 'Something went wrong'}
-        </p>
-      )}
     </div>
   );
 }

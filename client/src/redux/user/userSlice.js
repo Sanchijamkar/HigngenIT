@@ -10,62 +10,57 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    signInStart: (state) => {
-      state.loading = true;
+    // Add loginSuccess action
+    loginSuccess: (state, action) => {
+      state.currentUser = action.payload; // Store user data (from the backend)
+      state.loading = false;
+      state.error = false;
     },
-    signInSuccess: (state, action) => {
+    setCurrentUser: (state, action) => {
+      state.currentUser = action.payload;
+    },
+    signOut: (state) => {
+      state.currentUser = null;
+    },
+    updateUserStart: (state) => {
+      state.loading = true;
+      state.error = false;
+    },
+    updateUserSuccess: (state, action) => {
       state.currentUser = action.payload;
       state.loading = false;
       state.error = false;
     },
-    signInFailure: (state, action) => {
+    updateUserFailure: (state) => {
       state.loading = false;
-      state.error = action.payload;
-    },
-    updateUserStart: (state) => {
-      state.loading = true;
-    },
-    updateUserSuccess: (state, action) => {
-      // Ensure isAdmin flag is preserved when updating the user
-      state.currentUser = { ...state.currentUser, ...action.payload, isAdmin: action.payload.isAdmin };
-      state.loading = false;
-      state.error = false;
-    },
-    updateUserFailure: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
+      state.error = true;
     },
     deleteUserStart: (state) => {
       state.loading = true;
+      state.error = false;
     },
     deleteUserSuccess: (state) => {
       state.currentUser = null;
       state.loading = false;
       state.error = false;
     },
-    deleteUserFailure: (state, action) => {
+    deleteUserFailure: (state) => {
       state.loading = false;
-      state.error = action.payload;
-    },
-    signOut: (state) => {
-      state.currentUser = null;
-      state.loading = false;
-      state.error = false;
+      state.error = true;
     },
   },
 });
 
 export const {
-  signInStart,
-  signInSuccess,
-  signInFailure,
-  updateUserFailure,
+  loginSuccess,
+  setCurrentUser,
+  signOut,
   updateUserStart,
   updateUserSuccess,
-  deleteUserFailure,
+  updateUserFailure,
   deleteUserStart,
   deleteUserSuccess,
-  signOut,
+  deleteUserFailure,
 } = userSlice.actions;
 
 export default userSlice.reducer;

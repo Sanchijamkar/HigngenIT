@@ -9,10 +9,11 @@ import PrivateRoute from './components/PrivateRoute';
 import ProjectEditor from './components/ProjectEditor';
 import ProjectList from './components/ProjectList';
 import IDELayout from './components/IDELayout';
-import AdminProfile from './pages/AdminProfile';
+import AdminPanel from './pages/AdminPanel';
 import ManageUsers from './pages/ManageUsers';
 import ContactUs from './pages/ContactUs';
 import ViewMessages from './pages/ViewMessages';
+import AdminSignIn from './pages/AdminSignIn';
 
 // Quiz
 import Exam from "./pages/quiz/Exam";
@@ -33,14 +34,7 @@ import UserQuestions from './pages/feed/UserQuestions';
 import UpdateQuestion from './pages/feed/UpdateQuestion';
 
 // Courses
-import CCourses from './pages/courses/CCourses';
-import CppCourses from './pages/courses/CppCourses';
-import JavaCourses from './pages/courses/JavaCourses';
-import PythonCourses from './pages/courses/PythonCourses';
-import CourseDetail from './pages/courses/CourseDetail';
-import AddCourse from './pages/courses/AddCourse';
-import ManageCourses from './pages/courses/ManageCourses';
-import EditCourse from './pages/courses/EditCourse';
+import CategoryPage from './pages/CategoryPage';
 
 // Notes
 import QuickNote from "./pages/notes/QuickNote";
@@ -52,24 +46,26 @@ export default function App() {
     <BrowserRouter>
       <Header />
       <Routes>
+
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/admin-signin" element={<AdminSignIn />} />
 
         {/* Private Routes for Authenticated Users */}
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
+          <Route path="/feedback" element={<Feed />} />
+          <Route path="/notes" element={<MyNotes />} />
           <Route path="/ide" element={<IDELayout />} />
           <Route path="/projects" element={<ProjectList />} />
           <Route path="/editor/:id" element={<ProjectEditor />} />
-
           <Route path="/play-quiz" element={<PlayQuiz />} />
           <Route path="/exam-write/:id" element={<ExamWrite />} />
           <Route path="/user-exam-report" element={<UserExamReport />} />
-
           <Route path="/feed" element={<Feed />} />
           <Route path="/questions" element={<QuestionList />} />
           <Route path="/questions/new" element={<AddQuestion />} />
@@ -77,13 +73,7 @@ export default function App() {
           <Route path="/questions/:id/comments/new" element={<AddComment />} />
           <Route path="/user/questions" element={<UserQuestions />} />
           <Route path="/questions/:id/edit" element={<UpdateQuestion />} />
-
-          <Route path="/courses/c" element={<CCourses />} />
-          <Route path="/courses/cpp" element={<CppCourses />} />
-          <Route path="/courses/java" element={<JavaCourses />} />
-          <Route path="/courses/python" element={<PythonCourses />} />
-          <Route path="/course/:id" element={<CourseDetail />} />
-
+          <Route path="/courses/:category" element={<CategoryPage />} />
           <Route path="/quicknote" element={<QuickNote />} />
           <Route path="/mynotes" element={<MyNotes />} />
           <Route path="/update/:id" element={<UpdateNote />} />
@@ -91,20 +81,14 @@ export default function App() {
 
         {/* Private Routes for Admin */}
         <Route element={<PrivateRoute adminOnly={true} />}>
-          <Route path="/admin-profile" element={<AdminProfile />} />
+          <Route path="/admin/dashboard" element={<AdminPanel />} />
           <Route path="/manage-users" element={<ManageUsers />} />
           <Route path="/messages" element={<ViewMessages />} />
-
           <Route path="/exam" element={<Exam />} />
           <Route path="/exam-add" element={<AddEditExam />} />
           <Route path="/exam-add/:id" element={<AddEditExam />} />
           <Route path="/admin-exam-report" element={<AdminExamReports />} />
-
           <Route path="/vfeed" element={<AdminFeedback />} />
-
-          <Route path="/add-course" element={<AddCourse />} />
-          <Route path="/edit-course/:id" element={<EditCourse />} />
-          <Route path="/manage-courses" element={<ManageCourses />} />
         </Route>
 
         {/* 404 Route for Undefined Paths */}

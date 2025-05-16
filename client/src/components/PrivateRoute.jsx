@@ -1,20 +1,20 @@
 import { useSelector } from 'react-redux';
-import { Outlet, Navigate, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 export default function PrivateRoute({ adminOnly = false }) {
-  const { currentUser } = useSelector(state => state.user);
+  const { currentUser } = useSelector((state) => state.user);
   const location = useLocation();
 
-  // Protect against non-logged-in users
   if (!currentUser) {
-    return <Navigate to="/sign-in" state={{ from: location }} />;
+    // If user is not logged in, redirect to admin sign-in page
+    return <Navigate to="/admin/signin" state={{ from: location }} replace />;
   }
 
-  // Handle admin-only route protection
   if (adminOnly && !currentUser.isAdmin) {
-    return <Navigate to="/profile" state={{ from: location }} />;
+    // If user is not an admin, redirect to their profile page
+    return <Navigate to="/profile" state={{ from: location }} replace />;
   }
 
-  // If the user is logged in and has the correct role, render the requested route
+  // If the user is authenticated and is an admin (if required), show the protected page
   return <Outlet />;
 }

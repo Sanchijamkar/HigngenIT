@@ -1,52 +1,33 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { useState, useRef, useEffect } from 'react';
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
-import { app } from '../firebase';
-import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure, signOut } from '../redux/user/userSlice';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  updateUserStart,
+  updateUserSuccess,
+  updateUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure,
+  signOut,
+} from '../redux/user/userSlice';
 import Sidebar from '../components/Sidebar';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'; // For arrow icons
 
 export default function Profile() {
   const dispatch = useDispatch();
-  const fileRef = useRef(null);
-  const [image, setImage] = useState(undefined);
-  const [imagePercent, setImagePercent] = useState(0);
-  const [imageError, setImageError] = useState(false);
-  const [formData, setFormData] = useState({});
-  const [updateSuccess, setUpdateSuccess] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // State for password visibility
-  const [errors, setErrors] = useState({});
-
+  const navigate = useNavigate();
   const { currentUser, loading, error } = useSelector((state) => state.user);
 
-  useEffect(() => {
-    if (image) {
-      handleFileUpload(image);
-    }
-  }, [image]);
+  const [formData, setFormData] = useState({});
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
 
-  const handleFileUpload = async (image) => {
-    const storage = getStorage(app);
-    const fileName = new Date().getTime() + image.name;
-    const storageRef = ref(storage, fileName);
-    const uploadTask = uploadBytesResumable(storageRef, image);
-    
-    uploadTask.on(
-      'state_changed',
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setImagePercent(Math.round(progress));
-      },
-      (error) => {
-        setImageError(true);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-          setFormData({ ...formData, profilePicture: downloadURL })
-        );
-      }
-    );
-  };
+  useEffect(() => {
+    if (!currentUser) {
+      navigate('/signin');
+    }
+  }, [currentUser, navigate]);
 
   const validate = () => {
     const newErrors = {};
@@ -111,6 +92,7 @@ export default function Profile() {
         return;
       }
       dispatch(deleteUserSuccess(data));
+      navigate('/signin');
     } catch (error) {
       dispatch(deleteUserFailure(error));
     }
@@ -120,105 +102,110 @@ export default function Profile() {
     try {
       await fetch('/api/auth/signout');
       dispatch(signOut());
+      navigate('/signin');
     } catch (error) {
       console.log(error);
     }
   };
 
+  // Function to navigate to the previous page
+  const handleBack = () => {
+    navigate(-1); // Go back to the previous page
+  };
+
+  // Function to navigate to the next page
+  const handleNext = () => {
+    navigate('/next-page'); // Replace '/next-page' with the actual next page route
+  };
+
   return (
-    <div className="flex h-full">
+    <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
 
-      <div className="flex-1 p-8 ml-64">
-        <h1 className='text-3xl font-semibold text-center mb-7'>Profile</h1>
-        <form onSubmit={handleSubmit} className='flex flex-col gap-4 max-w-lg mx-auto'>
-          <input
-            type='file'
-            ref={fileRef}
-            hidden
-            accept='image/*'
-            onChange={(e) => setImage(e.target.files[0])}
-          />
-          <img
-            src={formData.profilePicture || currentUser.profilePicture}
-            alt='profile'
-            className='h-24 w-24 self-center cursor-pointer rounded-full object-cover'
-            onClick={() => fileRef.current.click()}
-          />
-          
-          <p className='text-sm self-center'>
-            {imageError ? (
-              <span className='text-red-700'>
-                Error uploading image (file size must be less than 2 MB)
-              </span>
-            ) : imagePercent > 0 && imagePercent < 100 ? (
-              <span className='text-slate-700'>{`Uploading: ${imagePercent} %`}</span>
-            ) : imagePercent === 100 ? (
-              <span className='text-green-700'>Image uploaded successfully</span>
-            ) : (
-              ''
-            )}
-          </p>
-          
-          <input
-            defaultValue={currentUser.username}
-            type='text'
-            id='username'
-            placeholder='Username'
-            className='bg-slate-100 rounded-lg p-3'
-            onChange={handleChange}
-          />
-          {errors.username && <p className="text-red-500">{errors.username}</p>}
+      <div className="flex-1 ml-64 p-8">
+        <div className="max-w-2xl mx-auto bg-white p-8 shadow-md rounded-lg">
+          <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">Your Profile</h2>
 
-          <input
-            defaultValue={currentUser.email}
-            type='email'
-            id='email'
-            placeholder='Email'
-            className='bg-slate-100 rounded-lg p-3'
-            onChange={handleChange}
-          />
-          {errors.email && <p className="text-red-500">{errors.email}</p>}
+          <div className="flex flex-col items-center mb-6">
+            <img
+              src={currentUser.profilePicture}
+              alt="Profile"
+              className="w-24 h-24 rounded-full object-cover mb-2 border-2 border-slate-300"
+            />
+            <p className="text-xl font-semibold">{currentUser.username}</p>
+            <p className="text-gray-600">{currentUser.email}</p>
+          </div>
 
-          <div className='relative'>
+          <form onSubmit={handleSubmit} className="space-y-4">
             <input
-              type={showPassword ? 'text' : 'password'}
-              id='password'
-              placeholder='Password'
-              className='bg-slate-100 rounded-lg p-3 w-full'
+              type="text"
+              id="username"
+              placeholder="Update Username"
+              className="w-full p-3 bg-gray-100 rounded-md"
               onChange={handleChange}
             />
+            {errors.username && <p className="text-red-500">{errors.username}</p>}
+
+            <input
+              type="email"
+              id="email"
+              placeholder="Update Email"
+              className="w-full p-3 bg-gray-100 rounded-md"
+              onChange={handleChange}
+            />
+            {errors.email && <p className="text-red-500">{errors.email}</p>}
+
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                placeholder="Update Password"
+                className="w-full p-3 bg-gray-100 rounded-md"
+                onChange={handleChange}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute top-3 right-4 text-sm text-blue-600"
+              >
+                {showPassword ? 'Hide' : 'Show'}
+              </button>
+            </div>
+            {errors.password && <p className="text-red-500">{errors.password}</p>}
+
             <button
-              type='button'
-              onClick={() => setShowPassword(!showPassword)}
-              className='absolute inset-y-0 right-3 flex items-center'
+              type="submit"
+              className="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition"
+              disabled={loading}
             >
-              {showPassword ? 'Hide' : 'Show'}
+              {loading ? 'Updating...' : 'Update Profile'}
+            </button>
+          </form>
+
+          <div className="flex justify-between mt-6 text-sm text-red-600 font-semibold">
+            <button onClick={handleDeleteAccount}>Delete Account</button>
+            <button onClick={handleSignOut}>Sign Out</button>
+          </div>
+
+          {error && <p className="text-red-500 text-center mt-4">Something went wrong!</p>}
+          {updateSuccess && <p className="text-green-600 text-center mt-4">Profile updated successfully!</p>}
+
+          {/* Back and Next buttons */}
+          <div className="flex justify-between mt-6">
+            <button
+              onClick={handleBack}
+              className="bg-gray-600 text-white p-3 rounded-md hover:bg-gray-700 flex items-center"
+            >
+              <FaArrowLeft className="mr-2" /> Back
+            </button>
+            <button
+              onClick={handleNext}
+              className="bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 flex items-center"
+            >
+              Next <FaArrowRight className="ml-2" />
             </button>
           </div>
-          {errors.password && <p className="text-red-500">{errors.password}</p>}
-
-          <button className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>
-            {loading ? 'Loading...' : 'Update'}
-          </button>
-        </form>
-
-        <div className='flex justify-between max-w-lg mx-auto mt-5'>
-          <span
-            onClick={handleDeleteAccount}
-            className='text-red-700 cursor-pointer'
-          >
-            Delete Account
-          </span>
-          <span onClick={handleSignOut} className='text-red-700 cursor-pointer'>
-            Sign out
-          </span>
         </div>
-
-        <p className='text-red-700 text-center mt-5'>{error && 'Something went wrong!'}</p>
-        <p className='text-green-700 text-center mt-5'>
-          {updateSuccess && 'User is updated successfully!'}
-        </p>
       </div>
     </div>
   );
