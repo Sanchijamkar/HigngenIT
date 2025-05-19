@@ -1,27 +1,29 @@
-// auth.js (or wherever your authentication middleware is)
-
 import jwt from 'jsonwebtoken';
-import User from '../models/user.js'; // Assuming the user model is needed for validation
+import User from '../models/user.js';
 
 export const authenticateUser = async (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1]; // Extract the token from the "Authorization" header
+  const authHeader = req.headers.authorization;
 
-  if (!token) {
-    return res.status(403).json({ message: 'No token provided, access denied' });
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'No token provided' });
   }
 
+  const token = authHeader.split(' ')[1];
+
   try {
-    // Verify the token and extract user data
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Ensure JWT_SECRET is set in your environment
-    const user = await User.findById(decoded.id); // Find the user based on the decoded token's ID
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Use `decoded.id` instead of `decoded.userId`
+    const user = await User.findById(decoded.id).select('-password');
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(401).json({ message: 'Invalid user' });
     }
 
-    req.user = user; // Attach the user object to the request for use in subsequent routes
-    next(); // Proceed to the next middleware or route handler
-  } catch (error) {
-    return res.status(401).json({ message: 'Invalid or expired token' });
+    req.user = user;
+    next();
+  } catch (err) {
+    console.error("Auth error:", err);
+    res.status(401).json({ message: 'Invalid or expired token' });
   }
 };

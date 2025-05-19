@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const FeedbackForm = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -48,8 +51,7 @@ const FeedbackForm = () => {
   };
 
   return (
-    
-    <div className="max-w-md mx-auto mt-8 p-9 bg-slate-50  shadow-lg rounded-lg">
+    <div className="max-w-md mx-auto mt-8 p-9 bg-slate-50 shadow-lg rounded-lg">
       <h2 className="text-2xl font-semibold text-black-600 mb-6 text-center">Feedback Form</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
@@ -89,10 +91,36 @@ const FeedbackForm = () => {
             rows="4"
           />
         </div>
-        <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-md shadow hover:bg-blue-700 transition duration-300">Submit</button>
+        <div className="flex justify-between">
+          {/* Back button - navigates to QuickNote page */}
+          <button
+            type="button"
+            onClick={() => navigate('/quicknote')}
+            className="bg-gray-500 text-white py-2 px-6 rounded-md hover:bg-gray-600 transition duration-300"
+          >
+            Back
+          </button>
+
+          {/* Submit button */}
+          <button
+            type="submit"
+            className="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transition duration-300"
+            disabled={!!errorMessage}
+          >
+            Submit
+          </button>
+
+          {/* Next button - navigates to Profile page */}
+          <button
+            type="button"
+            onClick={() => navigate('/profile')}
+            className="bg-green-600 text-white py-2 px-6 rounded-md hover:bg-green-700 transition duration-300"
+          >
+            Next
+          </button>
+        </div>
       </form>
     </div>
-    
   );
 };
 

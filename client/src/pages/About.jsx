@@ -94,7 +94,7 @@ export default function About() {
             {/* Team Member 1 */}
             <div className="bg-white p-6 rounded-lg shadow-lg text-center">
               <img src="src/images/team1.png" alt="Team Member 1" className="w-32 h-32 rounded-full mx-auto mb-4" />
-              <h3 className="text-xl font-semibold">John Doe</h3>
+              <h3 className="text-xl font-semibold">Tukkanna Sir</h3>
               <p className="text-gray-600">Founder & Lead Instructor</p>
             </div>
 

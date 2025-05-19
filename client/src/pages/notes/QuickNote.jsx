@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
 export default function QuickNote() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     Course: '',
     Date: '',
@@ -50,6 +54,15 @@ export default function QuickNote() {
       console.error('Error:', error.message);
       setSuccessMessage('Error creating note, please try again.');  // Set an error message
     }
+  };
+
+  // Navigation handlers for Back and Next
+  const handleBack = () => {
+    navigate('/profile');
+  };
+
+  const handleNext = () => {
+    navigate('/feedback');
   };
 
   return (
@@ -129,11 +142,27 @@ export default function QuickNote() {
         </button>
       </form>
 
-      {successMessage && (  // Conditionally render the success message
+      {successMessage && (
         <div className='mt-4 p-3 text-center bg-green-100 text-green-700 rounded-lg'>
           {successMessage}
         </div>
       )}
+
+      {/* Navigation buttons */}
+      <div className="flex justify-between mt-8 max-w-lg mx-auto">
+        <button
+          onClick={handleBack}
+          className="flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+        >
+          <FaArrowLeft /> Back
+        </button>
+        <button
+          onClick={handleNext}
+          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Next <FaArrowRight />
+        </button>
+      </div>
     </div>
   );
 }

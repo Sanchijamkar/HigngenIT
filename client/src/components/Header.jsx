@@ -113,7 +113,7 @@ export default function Header() {
               <button onClick={signOutAdmin} className="hover:text-red-600">Admin Sign Out</button>
             </>
           ) : (
-            <Link to="/admin-sign-in" className="hover:text-blue-600">Admin Sign In</Link>
+            <Link to="/admin-signin" className="hover:text-blue-600">Admin Sign In</Link>
           )}
         </nav>
 
@@ -153,7 +153,7 @@ export default function Header() {
                   <button onClick={signOutAdmin} className="block py-2 text-red-600 text-left">Admin Sign Out</button>
                 </>
               ) : (
-                <Link to="/admin-sign-in" className="block py-2">Admin Sign In</Link>
+                <Link to="/admin-signin" className="block py-2">Admin Sign In</Link>
               )}
             </div>
           </div>
