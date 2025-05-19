@@ -33,8 +33,5 @@
   "bugs": {
     "url": "https://github.com/dulakshi2002/Student-Registration-System/issues"
   },
-  "homepage": "https://github.com/dulakshi2002/Student-Registration-System#readme",
-  "devDependencies": {
-    "vite": "^6.3.5"
-  }
+  "homepage": "https://github.com/dulakshi2002/Student-Registration-System#readme"
 }
